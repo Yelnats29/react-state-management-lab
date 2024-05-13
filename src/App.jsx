@@ -1,3 +1,4 @@
+import "./App.css"
 import { useState, useEffect } from "react";
 
 const App = () => {
@@ -122,38 +123,21 @@ const App = () => {
 
   return (
     <>
-
       <h1>Zombie Fighters!</h1>
       <div className="moneyValue">
         <h2>Current Money Value</h2>
         <p>Money: ${money}</p>
       </div>
       <br></br>
-      <ul>
-        <div className="fighterList">
-          {zombieFighters.map((zombieFighter, index) => (
-            <li key={index}>
-              <h2>{zombieFighter.name}</h2>
-              <p>Price: {zombieFighter.price} </p>
-              <p>Strength: {zombieFighter.strength}</p>
-              <p>Agility: {zombieFighter.agility}</p>
-              <img src={zombieFighter.img} alt={zombieFighter.name}></img>
-              <br></br>
-              <button onClick={() => handleAddFighter(zombieFighter)}>Add to Team</button>
-              <br></br>
-            </li>
-          ))}
-        </div>
-
-        <h2>My Team</h2>
-        <h3>Current Money Value</h3>
-        <p>Money: ${money}</p>
-        {team.length === 0 ? (<p>Pick some team members</p>) : (<div>
-          <p>Total Strength: {totalStrength}</p>
-          <p>Total Agility: {totalAgility}</p>
+      <h2>Total Team Strength: {totalStrength}</h2>
+      <h2>Total Team Agility: {totalAgility}</h2>
+      <br></br>
+      <h2>My Team</h2>
+      {team.length === 0 ? (<p>Pick some team members</p>) : (<ul>
+        <li>
           <div className="fighterList">
             {team.map((member, index) => (
-              <li key={index}>
+              <div key={index}>
                 <h2>{member.name}</h2>
                 <p>Price: ${member.price}</p>
                 <p>Strength: {member.strength}</p>
@@ -161,11 +145,30 @@ const App = () => {
                 <img src={member.img} alt={member.name} />
                 <br></br>
                 <button onClick={() => handleRemoveFighter(index)}>Remove from Team</button>
-              </li>
+              </div>
             ))}
           </div>
-        </div>
-        )}
+        </li>
+      </ul>
+      )}
+
+      <ul>
+        <li>
+          <div className="fighterList">
+            {zombieFighters.map((zombieFighter, index) => (
+              <div key={index}>
+                <h2>{zombieFighter.name}</h2>
+                <p>Price: {zombieFighter.price} </p>
+                <p>Strength: {zombieFighter.strength}</p>
+                <p>Agility: {zombieFighter.agility}</p>
+                <img src={zombieFighter.img} alt={zombieFighter.name}></img>
+                <br></br>
+                <button onClick={() => handleAddFighter(zombieFighter)}>Add to Team</button>
+                <br></br>
+              </div>
+            ))}
+          </div>
+        </li>
       </ul>
     </>
   );
