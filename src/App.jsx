@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const App = () => {
   const [team, setTeam] = useState([]);
   const [money, setMoney] = useState(100);
+  const [totalStrength, setTotalStrength] = useState(0);
+  const [totalAgility, setTotalAgility] = useState(0);
   const [zombieFighters, setZombieFighters] = useState([
     {
       name: 'Survivor',
@@ -76,34 +78,67 @@ const App = () => {
     },
   ]
   );
-
+  // Add a Team Member and calucalte the remaining Money
   const handleAddFighter = (newMember) => {
-    if (money >= zombieFighter.price) {
+    if (money >= newMember.price) {
       setTeam([...team, newMember]);
-      setMoney(money - zombieFighter.price);
+      setMoney(money - newMember.price);
     } else {
       alert('Not enough money!');
     };
   };
 
+  // Calculate the total Strength of the team. I had to put this in the import statement above to define the it
+  useEffect(() => {
+    const calculateTotalStrength = () => {
+      let total = 0;
+      team.forEach((member) => {
+        total += member.strength;
+      });
+      setTotalStrength(total);
+    };
+    calculateTotalStrength();
+  }, [team]);
+
+  // Calculate the total Agility of the team. I had to put this in the import statement above to define the it
+  useEffect(() => {
+    const calculateTotalAgility = () => {
+      let total = 0;
+      team.forEach((member) => {
+        total += member.agility;
+      });
+      setTotalAgility(total);
+    };
+    calculateTotalAgility();
+  }, [team]);
+
+  // Remove Member from Team
+  const handleRemoveFighter = (index) => {
+    const newTeam = [...team];
+    const removedFighter = newTeam.splice(index, 1)[0];
+    setTeam(newTeam);
+    setMoney(money + removedFighter.price);
+  };
+
   return (
     <>
-    
+
       <h1>Zombie Fighters!</h1>
       <div className="moneyValue">
-          <h2>Current Money Value</h2>
-          <p>Money: ${money}</p>
-        </div>
-        <br></br>
+        <h2>Current Money Value</h2>
+        <p>Money: ${money}</p>
+      </div>
+      <br></br>
       <ul>
         <div className="fighterList">
           {zombieFighters.map((zombieFighter, index) => (
             <li key={index}>
-              <img src={zombieFighter.img} alt={zombieFighter.name}></img>
               <h2>{zombieFighter.name}</h2>
               <p>Price: {zombieFighter.price} </p>
               <p>Strength: {zombieFighter.strength}</p>
               <p>Agility: {zombieFighter.agility}</p>
+              <img src={zombieFighter.img} alt={zombieFighter.name}></img>
+              <br></br>
               <button onClick={() => handleAddFighter(zombieFighter)}>Add to Team</button>
               <br></br>
             </li>
@@ -111,26 +146,29 @@ const App = () => {
         </div>
 
         <h2>My Team</h2>
-        {team.length === 0 ? (<p>Pick some team members</p>) : (<div className="fighterList">
-          {team.map((member, index) => (
-            <li key={index}>
-              <img src={member.img} alt={member.name} />
-              <h2>{member.name}</h2>
-              <p>Price: ${member.price}</p>
-              <p>Strength: {member.strength}</p>
-              <p>Agility: {member.agility}</p>
-            </li>
-          ))}
+        <h3>Current Money Value</h3>
+        <p>Money: ${money}</p>
+        {team.length === 0 ? (<p>Pick some team members</p>) : (<div>
+          <p>Total Strength: {totalStrength}</p>
+          <p>Total Agility: {totalAgility}</p>
+          <div className="fighterList">
+            {team.map((member, index) => (
+              <li key={index}>
+                <h2>{member.name}</h2>
+                <p>Price: ${member.price}</p>
+                <p>Strength: {member.strength}</p>
+                <p>Agility: {member.agility}</p>
+                <img src={member.img} alt={member.name} />
+                <br></br>
+                <button onClick={() => handleRemoveFighter(index)}>Remove from Team</button>
+              </li>
+            ))}
+          </div>
         </div>
-
-
-
-
-
         )}
       </ul>
     </>
   );
-}
+};
 
 export default App
